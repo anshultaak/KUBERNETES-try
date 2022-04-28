@@ -1,15 +1,11 @@
 environment variables, two containers, port number,labels, selector
 
 sudo su
-
 apt-get update
-
 apt-get install apt-transport-https
-
 (# it's used communication in clusters)
 
 apt install docker.io -y
-
 docker --version
 
 systemctl start docker
@@ -17,7 +13,6 @@ systemctl start docker
 systemctl enable docker
 
 curl -s http/gpg..gijmn.com | sudo apt-key add
-
 (# gpg key links find in google it is used to communicate inner cluster)
 
 nano /etc/apt/sources.list.d/kubernetes.list
@@ -35,89 +30,65 @@ Minikubes
 apt-get install minikude......link
 
 minikube status
-
 kubectl status
 
-Pods or nodes information 
+PODS AND NODE INFORMATION
 
 kubectl get pods
-
 (# all pod information)
-
 kubectl get nodes
-
 (# all nodes information)
-
 kubectl  describe node name_node
-
 (# check node by name)
-
 kubectl  describe pods name_node
-
 kubectl get pods -o wide
-
 (# you get pod id )
 
-Log
+LOGS
 
 kubectl logs -f pod_name -c container_name -n namespace_namr
 
-Delete
+DELETE
 
 kubectl delete pod pod_name
-
 kubectl delete pod -l env=ansh
-
 (# all matching pod delete)
 
-Go inside pod or Container
+GO INSIDE POD or CONTAINER
 
 kubectl exec  pod_name -it  -c container_name -n namespace_name   --/bin/bash
 
-labels
+LABELS
 
 kubectl get pods --show-labels
-
 (# show all labels)
-
 kubectl labels pods pod_name name=Anshul
-
 (# you want add label on existing pod)
-
 kubectl get  pods -l env=Anshul
-
 (# show all matching labels)
-
 kubectl get  pods -l env!=Anshul
-
 (# show not matching labels)
 
-Selectors
+SELECTORS
 
 kubectl get pods -l 'env in (anshul,ans)'
-
 kubectl get pods -l 'env not in (anshul,ans)'
 
-Replicas
+REPLICAS
 
 kubectl get rc 
-
 (# all replicas information)
-
 kubectl scale --replicas=8 rc -l name=anshul
-
 (# all replicas set which have this label)
 
-Deploy
+DEPLOY
 
 kubectl get deploy
-
 kubectl describe deploy name_deployment
 
-Rollback( go back pervious varsion)
+ROLLBACK( go back pervious varsion)
 
 kubectl  rollout undo deploy/mydeployvemnt --to-revision=2
-
 ( # go back to version number)
 
 kubectl rollout undo deployment name_depolymeng
