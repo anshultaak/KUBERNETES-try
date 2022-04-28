@@ -1,0 +1,1020 @@
+environment variables, two containers, port number,labels, selector
+
+sudo su
+
+apt-get update
+
+apt-get install apt-transport-https
+
+(# it's used communication in clusters)
+
+apt install docker.io -y
+
+docker --version
+
+systemctl start docker
+
+systemctl enable docker
+
+curl -s http/gpg..gijmn.com | sudo apt-key add
+
+(# gpg key links find in google it is used to communicate inner cluster)
+
+nano /etc/apt/sources.list.d/kubernetes.list
+
+Deb http/kubernetdownloadlink....
+
+#exit file
+
+apt-get update 
+
+apt-get install kubeict kubeadm kubectl kubernetes-cni
+
+Minikubes
+
+apt-get install minikude......link
+
+minikube status
+
+kubectl status
+
+Pods or nodes information 
+
+kubectl get pods
+
+(# all pod information)
+
+kubectl get nodes
+
+(# all nodes information)
+
+kubectl  describe node name_node
+
+(# check node by name)
+
+kubectl  describe pods name_node
+
+kubectl get pods -o wide
+
+(# you get pod id )
+
+Log
+
+kubectl logs -f pod_name -c container_name -n namespace_namr
+
+Delete
+
+kubectl delete pod pod_name
+
+kubectl delete pod -l env=ansh
+
+(# all matching pod delete)
+
+Go inside pod or Container
+
+kubectl exec  pod_name -it  -c container_name -n namespace_name   --/bin/bash
+
+labels
+
+kubectl get pods --show-labels
+
+(# show all labels)
+
+kubectl labels pods pod_name name=Anshul
+
+(# you want add label on existing pod)
+
+kubectl get  pods -l env=Anshul
+
+(# show all matching labels)
+
+kubectl get  pods -l env!=Anshul
+
+(# show not matching labels)
+
+Selectors
+
+kubectl get pods -l 'env in (anshul,ans)'
+
+kubectl get pods -l 'env not in (anshul,ans)'
+
+Replicas
+
+kubectl get rc 
+
+(# all replicas information)
+
+kubectl scale --replicas=8 rc -l name=anshul
+
+(# all replicas set which have this label)
+
+Deploy
+
+kubectl get deploy
+
+kubectl describe deploy name_deployment
+
+Rollback( go back pervious varsion)
+
+kubectl  rollout undo deploy/mydeployvemnt --to-revision=2
+
+( # go back to version number)
+
+kubectl rollout undo deployment name_depolymeng
+
+(# go back pervious version)
+
+kubectl rollout status deployment name_depolymeng
+
+kubectl rollout history deployment name_depolymeng
+
+Namespace
+
+kubectl get pod --all-namespace 
+
+MULTI CONTAINER POD ENVIRONMENT 
+
+kind: Pod
+
+apiVersion: v1
+
+metadata:
+
+ name: testpod3
+
+spec:
+
+ containers:
+
+   - name: c00
+
+     image: ubuntu
+
+     command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5 ; done"]
+
+   - name: c01
+
+     image: ubuntu
+
+     command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+
+POD ENVIRONMENT  VARIABLES
+
+kind: Pod
+
+apiVersion: v1
+
+metadata:
+
+ name: environments
+
+spec:
+
+ containers:
+
+   - name: c00
+
+     image: ubuntu
+
+     command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+
+     env:                        # List of environment variables to be used inside the pod
+
+     - name: MYNAME
+
+       value: BHUPINDER
+
+POD WITH PORTS
+
+kind: Pod
+
+apiVersion: v1
+
+metadata:
+
+ name: testpod4
+
+spec:
+
+ containers:
+
+   - name: c00
+
+     image: httpd
+
+     ports:
+
+      - containerPort: 80  
+
+EXAMPLE OF LABELS
+
+kind: Pod
+
+apiVersion: v1
+
+metadata:
+
+ name: delhipod
+
+ labels:                                                   
+
+   env: development
+
+   class: pods
+
+spec:
+
+   containers:
+
+      - name: c00
+
+        image: ubuntu
+
+        command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+
+NODE SELECTOR EXAMPLE
+
+kind: Pod
+
+apiVersion: v1
+
+metadata:
+
+ name: nodelabels
+
+ labels:
+
+   env: development
+
+spec:
+
+   containers:
+
+      - name: c00
+
+        image: ubuntu
+
+        command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+
+   nodeSelector:                                         
+
+      hardware: t2-medium
+
+EXAMPLE OF REPLICATION CONTROLLER
+
+kind: ReplicationController               
+
+apiVersion: v1
+
+metadata:
+
+ name: myreplica
+
+spec:
+
+ replicas: 2            
+
+ selector:        
+
+   myname: Bhupinder Rajput                             
+
+ template:                
+
+   metadata:
+
+     name: testpod6
+
+     labels:            
+
+       myname: Bhupinder
+
+   spec:
+
+    containers:
+
+      - name: c00
+
+        image: ubuntu
+
+        command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+
+DEPLOYMENT EXAMPLE
+
+kind: Deployment
+
+apiVersion: apps/v1
+
+metadata:
+
+  name: mydeployments
+
+spec:
+
+  replicas: 2
+
+  selector:     
+
+   matchLabels:
+
+    name: deployment
+
+  template:
+
+    metadata:
+
+      name: testpod
+
+      labels:
+
+        name: deployment
+
+    spec:
+
+     containers:
+
+       - name: c00
+
+         image: ubuntu
+
+         command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5; done"]
+
+#volume labs
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ name: myvolemptydir
+
+spec:
+
+ containers:
+
+ - name: c1
+
+   image: centos
+
+   command: ["/bin/bash", "-c", "sleep 15000"]
+
+   volumeMounts:                                    # Mount definition inside the container
+
+     - name: xchange
+
+       mountPath: "/tmp/xchange"          
+
+ - name: c2
+
+   image: centos
+
+   command: ["/bin/bash", "-c", "sleep 10000"]
+
+   volumeMounts:
+
+     - name: xchange
+
+       mountPath: "/tmp/data"
+
+ volumes:                                                   
+
+ - name: xchange
+
+   emptyDir: {}
+
+HOST PATH
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ name: myvolhostpath
+
+spec:
+
+ containers:
+
+ - image: centos
+
+   name: testc
+
+   command: ["/bin/bash", "-c", "sleep 15000"]
+
+   volumeMounts:
+
+   - mountPath: /tmp/hostpath
+
+     name: testvolume
+
+ volumes:
+
+ - name: testvolume
+
+   hostPath:
+
+     path: /tmp/data 
+
+KUBERNETES NETWORKING
+
+================
+
+kind: Deployment
+
+apiVersion: apps/v1
+
+metadata:
+
+  name: mydeployments
+
+spec:
+
+  replicas: 1
+
+  selector:      # tells the controller which pods to watch/belong to
+
+   matchLabels:
+
+    name: deployment
+
+  template:
+
+    metadata:
+
+      name: testpod1
+
+      labels:
+
+        name: deployment
+
+    spec:
+
+     containers:
+
+       - name: c00
+
+         image: httpd
+
+         ports:
+
+         - containerPort: 80
+
+# in service file
+
+kind: Service                             # Defines to create Service type Object
+
+apiVersion: v1
+
+metadata:
+
+ name: demoservice
+
+spec:
+
+ ports:
+
+   - port: 80                               # Containers port exposed
+
+     targetPort: 80                     # Pods port
+
+ selector:
+
+   name: deployment                    # Apply this service to any pods which has the specific label
+
+ type: ClusterIP                       # Specifies the service type i.e ClusterIP or NodePort
+
+PERSISTENT VOLUME
+
+================================
+
+apiVersion: v1
+
+kind: PersistentVolume
+
+metadata:
+
+ name: myebsvol
+
+spec:
+
+ capacity:
+
+   storage: 1Gi
+
+ accessModes:
+
+   - ReadWriteOnce
+
+ persistentVolumeReclaimPolicy: Recycle
+
+ awsElasticBlockStore:
+
+   volumeID:           # YAHAN APNI EBS VOLUME ID DAALO
+
+   fsType: ext4
+
+============
+
+apiVersion: v1
+
+kind: PersistentVolumeClaim
+
+metadata:
+
+ name: myebsvolclaim
+
+spec:
+
+ accessModes:
+
+   - ReadWriteOnce
+
+ resources:
+
+   requests:
+
+     storage: 1Gi
+
+==================================================================================================================
+
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+
+ name: pvdeploy
+
+spec:
+
+ replicas: 1
+
+ selector:      # tells the controller which pods to watch/belong to
+
+   matchLabels:
+
+    app: mypv
+
+ template:
+
+   metadata:
+
+     labels:
+
+       app: mypv
+
+   spec:
+
+     containers:
+
+     - name: shell
+
+       image: centos
+
+       command: ["bin/bash", "-c", "sleep 10000"]
+
+       volumeMounts:
+
+       - name: mypd
+
+         mountPath: "/tmp/persistent"
+
+     volumes:
+
+       - name: mypd
+
+         persistentVolumeClaim:
+
+           claimName: myebsvolclaim
+
+HEALTHCHECK/LIVENESSPROB 
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ labels:
+
+   test: liveness
+
+ name: mylivenessprobe
+
+spec:
+
+ containers:
+
+ - name: liveness
+
+   image: ubuntu
+
+   args:
+
+   - /bin/sh
+
+   - -c
+
+   - touch /tmp/healthy; sleep 1000
+
+   livenessProbe:                                          
+
+     exec:
+
+       command:                                         
+
+       - cat                
+
+       - /tmp/healthy
+
+     initialDelaySeconds: 5          
+
+     periodSeconds: 5                                 
+
+     timeoutSeconds: 30   
+
+configmap
+
+====================================================================
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ name: myvolconfig
+
+spec:
+
+ containers:
+
+ - name: c1
+
+   image: centos
+
+   command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5 ; done"]
+
+   volumeMounts:
+
+     - name: testconfigmap
+
+       mountPath: "/tmp/config"   # the config files will be mounted as ReadOnly by default here
+
+ volumes:
+
+ - name: testconfigmap
+
+   configMap:
+
+      name: mymap   # this should match the config map name created in the first step
+
+      items:
+
+      - key: sample.conf
+
+        path: sample.conf
+
+==============================================================================
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ name: myenvconfig
+
+spec:
+
+ containers:
+
+ - name: c1
+
+   image: centos
+
+   command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5 ; done"]
+
+   env:
+
+   - name: MYENV         # env name in which value of the key is stored
+
+     valueFrom:
+
+       configMapKeyRef:
+
+         name: mymap      # name of the config created
+
+         key: sample.conf            
+
+=========================================================
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ name: myvolsecret
+
+spec:
+
+ containers:
+
+ - name: c1
+
+   image: centos
+
+   command: ["/bin/bash", "-c", "while true; do echo Technical-guftgu; sleep 5 ; done"]
+
+   volumeMounts:
+
+     - name: testsecret
+
+       mountPath: "/tmp/mysecrets"   # the secret files will be mounted as ReadOnly by default here
+
+ volumes:
+
+ - name: testsecret
+
+   secret:
+
+      secretName: mysecret  
+
+=============================NAMESPACES===================================
+
+apiVersion: v1
+
+kind: Namespace
+
+metadata:
+
+  name: dev
+
+  labels:
+
+    name: dev
+
+=================================to create a pod=================
+
+vi pod.yml
+
+kind: Pod                              
+
+apiVersion: v1                     
+
+metadata:                           
+
+ name: testpod                  
+
+spec:                                    
+
+ containers:                      
+
+   - name: c00                     
+
+     image: ubuntu              
+
+     command: ["/bin/bash", "-c", "while true; do echo Technical Guftgu; sleep 5 ; done"]
+
+ restartPolicy: Never       
+
+==============================================================================================
+
+$ kubectl config set-context $(kubectl config current-context) --namespace=dev
+
+$ kubectl config view | grep namespace:
+
+==============================================================================================
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ name: resources
+
+spec:
+
+ containers:
+
+ - name: resource
+
+   image: centos
+
+   command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5 ; done"]
+
+   resources:                                          
+
+     requests:
+
+       memory: "64Mi"
+
+       cpu: "100m"
+
+     limits:
+
+       memory: "128Mi"
+
+       cpu: "200m"
+
+============RESOURCEQUOTA========================================
+
+apiVersion: v1
+
+kind: ResourceQuota
+
+metadata:
+
+  name: myquota
+
+spec:
+
+ hard:
+
+   limits.cpu: "400m"
+
+   limits.memory: "400Mi"
+
+   requests.cpu: "200m"
+
+   requests.memory: "200Mi"
+
+===========================================================
+
+kind: Deployment
+
+apiVersion: apps/v1
+
+metadata:
+
+ name: deployments
+
+spec:
+
+ replicas: 3
+
+ selector:      
+
+   matchLabels:
+
+    objtype: deployment
+
+ template:
+
+   metadata:
+
+     name: testpod8
+
+     labels:
+
+       objtype: deployment
+
+   spec:
+
+    containers:
+
+      - name: c00
+
+        image: ubuntu
+
+        command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5 ; done"]
+
+        resources:
+
+           requests:
+
+             cpu: "200m"
+
+============================================================
+
+apiVersion: v1
+
+kind: LimitRange
+
+metadata:
+
+ name: cpu-limit-range
+
+spec:
+
+ limits:
+
+ - default:
+
+     cpu: 1
+
+   defaultRequest:
+
+     cpu: 0.5
+
+   type: Container
+
+==============cpu2.yml======================================
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ name: default-cpu-demo-2
+
+spec:
+
+ containers:
+
+ - name: default-cpu-demo-2-ctr
+
+   image: nginx
+
+   resources:
+
+     limits:
+
+       cpu: "1"
+
+=================================================================================================
+
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+ name: default-cpu-demo-3
+
+spec:
+
+ containers:
+
+ - name: default-cpu-demo-3-ctr
+
+   image: nginx
+
+   resources:
+
+     requests:
+
+       cpu: "0.75"
+
+HORIZONTAL
+
+kind: Deployment
+
+apiVersion: apps/v1
+
+metadata:
+
+  name: mydeploy
+
+spec:
+
+  replicas: 1
+
+  selector:
+
+   matchLabels:
+
+    name: deployment
+
+  template:
+
+    metadata:
+
+      name: testpod8
+
+      labels:
+
+        name: deployment
+
+    spec:
+
+     containers:
+
+       - name: c00
+
+         image: httpd
+
+         ports:
+
+         - containerPort: 80
+
+         resources:
+
+           limits:
+
+             cpu: 500m
+
+           requests:
+
+             cpu: 200m
+
+---------------------
+
+$ kubectl autoscale deployment mydeploy --cpu-percent=20 --min=1 --max=10
+
+--------------
+
